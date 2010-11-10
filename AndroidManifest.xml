@@ -17,8 +17,7 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.google.android.apps.iosched"
-    android:versionCode="12"
-    android:versionName="0.12">
+    android:versionName="0.10" android:versionCode="1">
 
     <uses-sdk
         android:minSdkVersion="6"
