@@ -58,15 +58,10 @@ public class HomeActivity extends Activity implements AsyncQueryListener,
     private Handler mMessageHandler = new Handler();
     private NotifyingAsyncQueryHandler mQueryHandler;
 
-    private TextView mCountdownTextView;
-    private View mNowPlayingLoadingView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-//        mNowPlayingLoadingView = findViewById(R.id.now_playing_loading);
 
         mState = (State) getLastNonConfigurationInstance();
         final boolean previousState = mState != null;
@@ -75,7 +70,6 @@ public class HomeActivity extends Activity implements AsyncQueryListener,
             // Start listening for SyncService updates again
             mState.mReceiver.setReceiver(this);
             updateRefreshStatus();
-            reloadNowPlaying(true);
 
         } else {
             mState = new State();
@@ -98,13 +92,6 @@ public class HomeActivity extends Activity implements AsyncQueryListener,
     @Override
     protected void onResume() {
         super.onResume();
-
-        // If 'tap here to enable Wifi' was shown, check if the user has enabled Wifi
-//        if (mState.mNowPlayingUri != null || mState.mNowPlayingGotoWifi) {
-//            reloadNowPlaying(false);
-//        } else if (mState.mNoResults) {
-//            showNowPlayingNoResults();
-//        }
     }
 
     /** Handle "refresh" title-bar action. */
@@ -114,7 +101,6 @@ public class HomeActivity extends Activity implements AsyncQueryListener,
         intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
         startService(intent);
 
-        reloadNowPlaying(true);
     }
 
     /** Handle "search" title-bar action. */
@@ -164,154 +150,10 @@ public class HomeActivity extends Activity implements AsyncQueryListener,
         startActivity(new Intent(Intent.ACTION_VIEW, Notes.CONTENT_URI));
     }
 
-    /** Handle "now playing" action. */
-    public void onNowPlayingClick(View v) {
-        // Shortcut launch directly to session the user is currently attending
-        // (or to enable wifi if wifi is off)
-        if (mState.mNowPlayingGotoWifi) {
-            Intent wifiSettingsIntent = new Intent();
-            wifiSettingsIntent.setAction(Settings.ACTION_WIFI_SETTINGS);
-            startActivity(wifiSettingsIntent);
-        } else if (mState.mNowPlayingUri != null) {
-            startActivity(new Intent(Intent.ACTION_VIEW, mState.mNowPlayingUri));
-        }
-    }
-
-    /** Handle "now playing > more" action. */
-    public void onNowPlayingMoreClick(View v) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Sessions.buildSessionsAtDirUri(System.currentTimeMillis()));
-        intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.title_now_playing));
-        startActivity(intent);
-    }
-
-    /** Handle "now playing" logo (Google I/O logo in before/after state) action. */
-    public void onNowPlayingLogoClick(View v) {
-        startActivity(new Intent(Intent.ACTION_VIEW, UIUtils.CONFERENCE_URL));
-    }
-
-    private void reloadNowPlaying(boolean forceRelocate) {
-        mMessageHandler.removeCallbacks(mCountdownRunnable);
-
-        final long currentTimeMillis = System.currentTimeMillis();
-
-        if (mNowPlayingLoadingView == null) // Landscape orientation
-            return;
-
-        ViewGroup homeRoot = (ViewGroup) findViewById(R.id.home_root);
-        View nowPlaying = findViewById(R.id.now_playing);
-        if (nowPlaying != null) {
-            homeRoot.removeView(nowPlaying);
-            nowPlaying = null;
-        }
-
-        // Show Loading... and load the view corresponding to the current state
-        mNowPlayingLoadingView.setVisibility(View.VISIBLE);
-        mState.mNoResults = false;
-        mState.mNowPlayingGotoWifi = false;
-        if (currentTimeMillis < UIUtils.CONFERENCE_START_MILLIS) {
-            nowPlaying = createNowPlayingBeforeView();
-        } else if (currentTimeMillis > UIUtils.CONFERENCE_END_MILLIS) {
-            nowPlaying = createNowPlayingAfterView();
-        } else {
-            nowPlaying = createNowPlayingDuringView(forceRelocate);
-        }
-
-        homeRoot.addView(nowPlaying, new LayoutParams(
-                LayoutParams.FILL_PARENT,
-                (int) getResources().getDimension(R.dimen.now_playing_height)));
-    }
-
-    private View createNowPlayingBeforeView() {
-        // Before conference, show countdown.
-        final View nowPlaying = getLayoutInflater().inflate(R.layout.now_playing_before, null);
-        final TextView nowPlayingTitle = (TextView) nowPlaying.findViewById(
-                R.id.now_playing_title);
-
-        mCountdownTextView = nowPlayingTitle;
-        mMessageHandler.post(mCountdownRunnable);
-        mNowPlayingLoadingView.setVisibility(View.GONE);
-        nowPlaying.setVisibility(View.VISIBLE);
-        return nowPlaying;
-    }
-
-    private View createNowPlayingAfterView() {
-        // After conference, show canned text.
-        final View nowPlaying = getLayoutInflater().inflate(R.layout.now_playing_after, null);
-        mNowPlayingLoadingView.setVisibility(View.GONE);
-        nowPlaying.setVisibility(View.VISIBLE);
-        return nowPlaying;
-    }
-
-    private View createNowPlayingDuringView(boolean forceRelocate) {
-        // Conference in progress, show now playing.
-        final View nowPlaying = getLayoutInflater().inflate(R.layout.now_playing_during, null);
-        nowPlaying.setVisibility(View.GONE);
-        if (!forceRelocate && mState.mNowPlayingUri != null) {
-            mQueryHandler.startQuery(mState.mNowPlayingUri, SessionsQuery.PROJECTION);
-        }
-        return nowPlaying;
-    }
-
-    /**
-     * Event that updates countdown timer. Posts itself again to
-     * {@link #mMessageHandler} to continue updating time.
-     */
-    private Runnable mCountdownRunnable = new Runnable() {
-        public void run() {
-            int remainingSec = (int) Math.max(0,
-                    (UIUtils.CONFERENCE_START_MILLIS - System.currentTimeMillis()) / 1000);
-            final boolean conferenceStarted = remainingSec == 0;
-
-            if (conferenceStarted) {
-                // Conference started while in countdown mode, switch modes and
-                // bail on future countdown updates.
-                mMessageHandler.postDelayed(new Runnable() {
-                    public void run() {
-                        reloadNowPlaying(true);
-                    }
-                }, 100);
-                return;
-            }
-
-            final int secs = remainingSec % 86400;
-            final int days = remainingSec / 86400;
-            final String str = getResources().getQuantityString(
-                    R.plurals.now_playing_countdown, days, days,
-                    DateUtils.formatElapsedTime(secs));
-            mCountdownTextView.setText(str);
-
-            // Repost ourselves to keep updating countdown
-            mMessageHandler.postDelayed(mCountdownRunnable, 1000);
-        }
-    };
-
-//    private void showNowPlayingNoResults() {
-//        mState.mNoResults = true;
-//        runOnUiThread(new Runnable() {
-//            public void run() {
-//                final View loadingView = findViewById(R.id.now_playing_loading);
-//                if (loadingView == null) return;
-//
-//                loadingView.setVisibility(View.GONE);
-//                findViewById(R.id.now_playing).setVisibility(View.VISIBLE);
-//                ((TextView) findViewById(R.id.now_playing_title)).setText(
-//                        R.string.now_playing_no_results);
-//            }
-//        });
-//    }
 
     /** {@inheritDoc} */
     public void onQueryComplete(int token, Object cookie, Cursor cursor) {
         try {
-            if (!cursor.moveToFirst()) {
-//                showNowPlayingNoResults();
-                return;
-            }
-
-            mState.mNowPlayingUri = Sessions.buildSessionUri(cursor
-                    .getString(SessionsQuery.SESSION_ID));
-
             // Format time block this session occupies
             final long blockStart = cursor.getLong(SessionsQuery.BLOCK_START);
             final long blockEnd = cursor.getLong(SessionsQuery.BLOCK_END);
@@ -319,7 +161,6 @@ public class HomeActivity extends Activity implements AsyncQueryListener,
             final String roomName = cursor.getString(SessionsQuery.ROOM_NAME);
             final String subtitle = formatSessionSubtitle(blockStart, blockEnd, roomName, this);
 
-//            findViewById(R.id.now_playing_loading).setVisibility(View.GONE);
             findViewById(R.id.now_playing).setVisibility(View.VISIBLE);
             ((TextView) findViewById(R.id.now_playing_title)).setText(cursor
                     .getString(SessionsQuery.TITLE));
@@ -348,7 +189,6 @@ public class HomeActivity extends Activity implements AsyncQueryListener,
             case SyncService.STATUS_FINISHED: {
                 mState.mSyncing = false;
                 updateRefreshStatus();
-                reloadNowPlaying(true);
                 break;
             }
             case SyncService.STATUS_ERROR: {
@@ -371,10 +211,7 @@ public class HomeActivity extends Activity implements AsyncQueryListener,
      */
     private static class State {
         public DetachableResultReceiver mReceiver;
-        public Uri mNowPlayingUri = null;
-        public boolean mNowPlayingGotoWifi = false;
         public boolean mSyncing = false;
-        public boolean mNoResults = false;
 
         private State() {
             mReceiver = new DetachableResultReceiver(new Handler());
