@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.io;
+package com.google.android.apps.iosched.ieeemass2010;
 
-import com.google.android.apps.iosched.io.XmlHandler.HandlerException;
+import com.google.android.apps.iosched.ieeemass2010.XmlHandler.HandlerException;
 import com.google.android.apps.iosched.util.ParserUtils;
 
 import org.xmlpull.v1.XmlPullParser;

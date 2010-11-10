@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.io;
+package com.google.android.apps.iosched.ieeemass2010;
 
 import static com.google.android.apps.iosched.util.ParserUtils.queryItemUpdated;
 import static com.google.android.apps.iosched.util.ParserUtils.sanitizeId;

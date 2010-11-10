@@ -16,7 +16,7 @@
 
 package com.google.android.apps.iosched.util;
 
-import com.google.android.apps.iosched.io.XmlHandler;
+import com.google.android.apps.iosched.ieeemass2010.XmlHandler;
 import com.google.android.apps.iosched.provider.ScheduleContract;
 import com.google.android.apps.iosched.provider.ScheduleContract.Blocks;
 import com.google.android.apps.iosched.provider.ScheduleContract.SyncColumns;

@@ -17,17 +17,17 @@
 package com.google.android.apps.iosched.service;
 
 import com.google.android.apps.iosched.R;
-import com.google.android.apps.iosched.io.LocalBlocksHandler;
-import com.google.android.apps.iosched.io.LocalExecutor;
-import com.google.android.apps.iosched.io.LocalRoomsHandler;
-import com.google.android.apps.iosched.io.LocalSearchSuggestHandler;
-import com.google.android.apps.iosched.io.LocalSessionsHandler;
-import com.google.android.apps.iosched.io.LocalTracksHandler;
-import com.google.android.apps.iosched.io.RemoteExecutor;
-import com.google.android.apps.iosched.io.RemoteSessionsHandler;
-import com.google.android.apps.iosched.io.RemoteSpeakersHandler;
-import com.google.android.apps.iosched.io.RemoteVendorsHandler;
-import com.google.android.apps.iosched.io.RemoteWorksheetsHandler;
+import com.google.android.apps.iosched.ieeemass2010.LocalBlocksHandler;
+import com.google.android.apps.iosched.ieeemass2010.LocalExecutor;
+import com.google.android.apps.iosched.ieeemass2010.LocalRoomsHandler;
+import com.google.android.apps.iosched.ieeemass2010.LocalSearchSuggestHandler;
+import com.google.android.apps.iosched.ieeemass2010.LocalSessionsHandler;
+import com.google.android.apps.iosched.ieeemass2010.LocalTracksHandler;
+import com.google.android.apps.iosched.ieeemass2010.RemoteExecutor;
+import com.google.android.apps.iosched.ieeemass2010.RemoteSessionsHandler;
+import com.google.android.apps.iosched.ieeemass2010.RemoteSpeakersHandler;
+import com.google.android.apps.iosched.ieeemass2010.RemoteVendorsHandler;
+import com.google.android.apps.iosched.ieeemass2010.RemoteWorksheetsHandler;
 import com.google.android.apps.iosched.provider.ScheduleProvider;
 
 import org.apache.http.Header;

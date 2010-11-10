@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.io;
+package com.google.android.apps.iosched.ieeemass2010;
 
 import static org.xmlpull.v1.XmlPullParser.END_DOCUMENT;
 import static org.xmlpull.v1.XmlPullParser.END_TAG;
 import static org.xmlpull.v1.XmlPullParser.START_TAG;
 import static org.xmlpull.v1.XmlPullParser.TEXT;
 
-import com.google.android.apps.iosched.R;
 import com.google.android.apps.iosched.provider.ScheduleContract;
-import com.google.android.apps.iosched.provider.ScheduleContract.Rooms;
+import com.google.android.apps.iosched.provider.ScheduleContract.Blocks;
 import com.google.android.apps.iosched.util.Lists;
+import com.google.android.apps.iosched.util.ParserUtils;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -35,42 +35,46 @@ import android.content.ContentResolver;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * Handle a local {@link XmlPullParser} that defines a set of {@link Rooms}
- * entries. Usually loaded from {@link R.xml} resources.
- */
-public class LocalRoomsHandler extends XmlHandler {
+public class LocalBlocksHandler extends XmlHandler {
 
-    public LocalRoomsHandler() {
+    public LocalBlocksHandler() {
         super(ScheduleContract.CONTENT_AUTHORITY);
     }
 
-    /** {@inheritDoc} */
     @Override
     public ArrayList<ContentProviderOperation> parse(XmlPullParser parser, ContentResolver resolver)
             throws XmlPullParserException, IOException {
         final ArrayList<ContentProviderOperation> batch = Lists.newArrayList();
 
+        // Clear any existing static blocks, as they may have been updated.
+        final String selection = Blocks.BLOCK_TYPE + "=? OR " + Blocks.BLOCK_TYPE +"=?";
+        final String[] selectionArgs = {
+                ParserUtils.BLOCK_TYPE_FOOD,
+                ParserUtils.BLOCK_TYPE_OFFICE_HOURS
+        };
+        batch.add(ContentProviderOperation.newDelete(Blocks.CONTENT_URI)
+                .withSelection(selection, selectionArgs).build());
+
         int type;
         while ((type = parser.next()) != END_DOCUMENT) {
-            if (type == START_TAG && Tags.ROOM.equals(parser.getName())) {
-                parseRoom(parser, batch, resolver);
+            if (type == START_TAG && Tags.BLOCK.equals(parser.getName())) {
+                batch.add(parseBlock(parser));
             }
         }
 
         return batch;
     }
 
-    /**
-     * Parse a given {@link Rooms} entry, building
-     * {@link ContentProviderOperation} to define it locally.
-     */
-    private static void parseRoom(XmlPullParser parser,
-            ArrayList<ContentProviderOperation> batch, ContentResolver resolver)
+    private static ContentProviderOperation parseBlock(XmlPullParser parser)
             throws XmlPullParserException, IOException {
         final int depth = parser.getDepth();
-        ContentProviderOperation.Builder builder = ContentProviderOperation
-                .newInsert(Rooms.CONTENT_URI);
+        final ContentProviderOperation.Builder builder = ContentProviderOperation
+                .newInsert(Blocks.CONTENT_URI);
+
+        String title = null;
+        long startTime = -1;
+        long endTime = -1;
+        String blockType = null;
 
         String tag = null;
         int type;
@@ -82,24 +86,34 @@ public class LocalRoomsHandler extends XmlHandler {
                 tag = null;
             } else if (type == TEXT) {
                 final String text = parser.getText();
-                if (Tags.ID.equals(tag)) {
-                    builder.withValue(Rooms.ROOM_ID, text);
-                } else if (Tags.NAME.equals(tag)) {
-                    builder.withValue(Rooms.ROOM_NAME, text);
-                } else if (Tags.FLOOR.equals(tag)) {
-                    builder.withValue(Rooms.ROOM_FLOOR, text);
+                if (Tags.TITLE.equals(tag)) {
+                    title = text;
+                } else if (Tags.START.equals(tag)) {
+                    startTime = ParserUtils.parseTime(text);
+                } else if (Tags.END.equals(tag)) {
+                    endTime = ParserUtils.parseTime(text);
+                } else if (Tags.TYPE.equals(tag)) {
+                    blockType = text;
                 }
             }
         }
 
-        batch.add(builder.build());
+        final String blockId = Blocks.generateBlockId(startTime, endTime);
+
+        builder.withValue(Blocks.BLOCK_ID, blockId);
+        builder.withValue(Blocks.BLOCK_TITLE, title);
+        builder.withValue(Blocks.BLOCK_START, startTime);
+        builder.withValue(Blocks.BLOCK_END, endTime);
+        builder.withValue(Blocks.BLOCK_TYPE, blockType);
+
+        return builder.build();
     }
 
-    /** XML tags expected from local source. */
-    private interface Tags {
-        String ROOM = "room";
-        String ID = "id";
-        String NAME = "name";
-        String FLOOR = "floor";
+    interface Tags {
+        String BLOCK = "block";
+        String TITLE = "title";
+        String START = "start";
+        String END = "end";
+        String TYPE = "type";
     }
 }
