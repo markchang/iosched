@@ -449,6 +449,11 @@ public class SessionDetailActivity extends TabActivity implements AsyncQueryList
             }
 
             speakersGroup.setVisibility(hasSpeakers ? View.VISIBLE : View.GONE);
+            if( hasSpeakers ) {
+            	Log.i(TAG, "Speaker visible");
+            } else {
+            	Log.i(TAG, "Speaker NOT visible");
+            }
 
             // Show empty message when all data is loaded, and nothing to show
             if (mSessionCursor && !mHasSummaryContent) {
