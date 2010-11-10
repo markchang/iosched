@@ -57,18 +57,21 @@ public class ScheduleActivity extends TabActivity {
 
         ((TextView) findViewById(R.id.title_text)).setText(getTitle());
 
-        final long wedStart = ParserUtils.parseTime("2010-05-19T00:00:00.000-07:00");
-        final long thuStart = ParserUtils.parseTime("2010-05-20T00:00:00.000-07:00");
+        final long tueStart = ParserUtils.parseTime("2010-11-09T00:00:00.000-08:00");
+        final long wedStart = ParserUtils.parseTime("2010-11-10T00:00:00.000-08:00");
+        final long thuStart = ParserUtils.parseTime("2010-11-11T00:00:00.000-08:00");
 
+        setupBlocksTab(TAG_TUE, tueStart);
         setupBlocksTab(TAG_WED, wedStart);
         setupBlocksTab(TAG_THU, thuStart);
 
         final long now = System.currentTimeMillis();
-        if (now >= thuStart) {
-            getTabHost().setCurrentTabByTag(TAG_THU);
+        if(now >= thuStart) {
+        	getTabHost().setCurrentTabByTag(TAG_THU);
+        } else if(now >= wedStart && now < thuStart) {
+        	getTabHost().setCurrentTabByTag(TAG_WED);
         } else {
-            // Otherwise start with first day
-            getTabHost().setCurrentTabByTag(TAG_WED);
+        	getTabHost().setCurrentTabByTag(TAG_TUE);
         }
     }
 

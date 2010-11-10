@@ -66,7 +66,7 @@ public class HomeActivity extends Activity implements AsyncQueryListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        mNowPlayingLoadingView = findViewById(R.id.now_playing_loading);
+//        mNowPlayingLoadingView = findViewById(R.id.now_playing_loading);
 
         mState = (State) getLastNonConfigurationInstance();
         final boolean previousState = mState != null;
@@ -100,11 +100,11 @@ public class HomeActivity extends Activity implements AsyncQueryListener,
         super.onResume();
 
         // If 'tap here to enable Wifi' was shown, check if the user has enabled Wifi
-        if (mState.mNowPlayingUri != null || mState.mNowPlayingGotoWifi) {
-            reloadNowPlaying(false);
-        } else if (mState.mNoResults) {
-            showNowPlayingNoResults();
-        }
+//        if (mState.mNowPlayingUri != null || mState.mNowPlayingGotoWifi) {
+//            reloadNowPlaying(false);
+//        } else if (mState.mNoResults) {
+//            showNowPlayingNoResults();
+//        }
     }
 
     /** Handle "refresh" title-bar action. */
@@ -286,26 +286,26 @@ public class HomeActivity extends Activity implements AsyncQueryListener,
         }
     };
 
-    private void showNowPlayingNoResults() {
-        mState.mNoResults = true;
-        runOnUiThread(new Runnable() {
-            public void run() {
-                final View loadingView = findViewById(R.id.now_playing_loading);
-                if (loadingView == null) return;
-
-                loadingView.setVisibility(View.GONE);
-                findViewById(R.id.now_playing).setVisibility(View.VISIBLE);
-                ((TextView) findViewById(R.id.now_playing_title)).setText(
-                        R.string.now_playing_no_results);
-            }
-        });
-    }
+//    private void showNowPlayingNoResults() {
+//        mState.mNoResults = true;
+//        runOnUiThread(new Runnable() {
+//            public void run() {
+//                final View loadingView = findViewById(R.id.now_playing_loading);
+//                if (loadingView == null) return;
+//
+//                loadingView.setVisibility(View.GONE);
+//                findViewById(R.id.now_playing).setVisibility(View.VISIBLE);
+//                ((TextView) findViewById(R.id.now_playing_title)).setText(
+//                        R.string.now_playing_no_results);
+//            }
+//        });
+//    }
 
     /** {@inheritDoc} */
     public void onQueryComplete(int token, Object cookie, Cursor cursor) {
         try {
             if (!cursor.moveToFirst()) {
-                showNowPlayingNoResults();
+//                showNowPlayingNoResults();
                 return;
             }
 
@@ -319,7 +319,7 @@ public class HomeActivity extends Activity implements AsyncQueryListener,
             final String roomName = cursor.getString(SessionsQuery.ROOM_NAME);
             final String subtitle = formatSessionSubtitle(blockStart, blockEnd, roomName, this);
 
-            findViewById(R.id.now_playing_loading).setVisibility(View.GONE);
+//            findViewById(R.id.now_playing_loading).setVisibility(View.GONE);
             findViewById(R.id.now_playing).setVisibility(View.VISIBLE);
             ((TextView) findViewById(R.id.now_playing_title)).setText(cursor
                     .getString(SessionsQuery.TITLE));

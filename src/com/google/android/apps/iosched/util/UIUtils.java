@@ -54,11 +54,11 @@ public class UIUtils {
     public static TimeZone CONFERENCE_TIME_ZONE = TimeZone.getTimeZone("America/Los_Angeles");
 
     public static final long CONFERENCE_START_MILLIS = ParserUtils.parseTime(
-            "2010-05-19T09:00:00.000-07:00");
+            "2010-11-09T08:00:00.000-07:00");
     public static final long CONFERENCE_END_MILLIS = ParserUtils.parseTime(
-            "2010-05-20T17:30:00.000-07:00");
+            "2010-11-11T17:30:00.000-07:00");
 
-    public static final Uri CONFERENCE_URL = Uri.parse("http://code.google.com/events/io/2010/");
+    public static final Uri CONFERENCE_URL = Uri.parse("https://mass2010.soe.ucsc.edu/");
 
     /** Flags used with {@link DateUtils#formatDateRange}. */
     private static final int TIME_FLAGS = DateUtils.FORMAT_SHOW_TIME

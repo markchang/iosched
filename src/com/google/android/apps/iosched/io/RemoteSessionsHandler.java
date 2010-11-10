@@ -183,7 +183,7 @@ public class RemoteSessionsHandler extends XmlHandler {
      *            {@link Columns#SESSION_TIME}.
      */
     private static long parseTime(String date, String time) throws HandlerException {
-        final String composed = String.format("%s 2010 %s -0700", date, time);
+        final String composed = String.format("%s 2010 %s -0800", date, time);
         try {
             return sTimeFormat.parse(composed).getTime();
         } catch (java.text.ParseException e) {
