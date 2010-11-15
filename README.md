@@ -10,18 +10,18 @@ How to Update the App code for your Convention
 -- then --
  
 1. Publish the worksheet as an atom stream: 
-	click Share->Publish as a web page->Sheets to publish "all sheets"
-	grab the atom URL.
+	1. click Share->Publish as a web page->Sheets to publish "all sheets"
+	1. grab the atom URL.
 1. edit src/org/acmelab/android/apps/iosched/service/SyncService.java 
-	change WORKSHEETS_URL to be the atom URL from step 1 up above, but in this format:
-	http://spreadsheets.google.com/ + feeds/worksheets + your_spreadsheet_key + public/basic
+	1. change WORKSHEETS_URL to be the atom URL from step 1 up above, but in this format:
+	1. http://spreadsheets.google.com/ + feeds/worksheets + your_spreadsheet_key + public/basic
 1. add the following columns to "sessions" worksheet: 
-	sessiondate, sessiontime, room, product, track, sessiontype, sessiontitle, tags, sessionspeakers, speakers, sessionabstract, sessionrequirements, sessionlink, sessionhashtag, fulllink, youtubelink, pdflink, moderatorlink, waveid, wavelink
-	(sessionlink MUST be filled in and unique!)
+	1. sessiondate, sessiontime, room, product, track, sessiontype, sessiontitle, tags, sessionspeakers, speakers, sessionabstract, sessionrequirements, sessionlink, sessionhashtag, fulllink, youtubelink, pdflink, moderatorlink, waveid, wavelink
+	1. (sessionlink MUST be filled in and unique!)
 1. add the following columns to the "speakers" worksheet: 
-	speakertitle, speakercompany, speakerabstract, speakerldap
+	1. speakertitle, speakercompany, speakerabstract, speakerldap
 1. add the following columns to the "sandbox" worksheet: 
-	companyname, companylocation, companydesc, companyurl, productdesc, companylogo, companypod, companytags
+	1. companyname, companylocation, companydesc, companyurl, productdesc, companylogo, companypod, companytags
 1. replace images in res/drawables, etc with your conventions logos.
 1. edit xml files in res/xml/ (blocks, tracks, rooms, sessions, etc) to reflect your conference. 
 
