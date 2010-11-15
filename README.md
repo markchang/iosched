@@ -1,7 +1,8 @@
 How to Update the App code for your Convention
 ===============================================
 
-1. Copy this spreadsheet as a template http://bit.ly/iosched_template -- this was derived from my effort to get this working with the IEEE MASS 2010 conference where I happened to be at while working on this.
+1. Copy this spreadsheet as a template http://bit.ly/iosched_template
+	* this was derived from my effort to get this working with the IEEE MASS 2010 conference where I happened to be at while working on this.
 
 -- or --
 
