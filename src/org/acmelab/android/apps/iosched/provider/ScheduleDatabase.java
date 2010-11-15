@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.provider;
+package org.acmelab.android.apps.iosched.provider;
 
-import com.google.android.apps.iosched.provider.ScheduleContract.Blocks;
-import com.google.android.apps.iosched.provider.ScheduleContract.BlocksColumns;
-import com.google.android.apps.iosched.provider.ScheduleContract.Notes;
-import com.google.android.apps.iosched.provider.ScheduleContract.NotesColumns;
-import com.google.android.apps.iosched.provider.ScheduleContract.Rooms;
-import com.google.android.apps.iosched.provider.ScheduleContract.RoomsColumns;
-import com.google.android.apps.iosched.provider.ScheduleContract.Sessions;
-import com.google.android.apps.iosched.provider.ScheduleContract.SessionsColumns;
-import com.google.android.apps.iosched.provider.ScheduleContract.Speakers;
-import com.google.android.apps.iosched.provider.ScheduleContract.SpeakersColumns;
-import com.google.android.apps.iosched.provider.ScheduleContract.SyncColumns;
-import com.google.android.apps.iosched.provider.ScheduleContract.Tracks;
-import com.google.android.apps.iosched.provider.ScheduleContract.TracksColumns;
-import com.google.android.apps.iosched.provider.ScheduleContract.Vendors;
-import com.google.android.apps.iosched.provider.ScheduleContract.VendorsColumns;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.Blocks;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.BlocksColumns;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.Notes;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.NotesColumns;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.Rooms;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.RoomsColumns;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.Sessions;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.SessionsColumns;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.Speakers;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.SpeakersColumns;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.SyncColumns;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.Tracks;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.TracksColumns;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.Vendors;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.VendorsColumns;
 
 import android.app.SearchManager;
 import android.content.Context;

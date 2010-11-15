@@ -16,14 +16,14 @@
 -->
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="1" package="com.google.android.apps.iosched" android:versionName="0.50">
+    android:versionCode="1" package="org.acmelab.android.apps.iosched" android:versionName="0.50">
 
     <uses-sdk
         android:minSdkVersion="6"
         android:targetSdkVersion="6" />
 
     <permission
-        android:name="com.google.android.apps.iosched.permission.WRITE_SCHEDULE"
+        android:name="org.acmelab.android.apps.iosched.permission.WRITE_SCHEDULE"
         android:protectionLevel="normal"
         android:label="@string/permission_write"
         android:description="@string/permission_write" />
@@ -185,8 +185,8 @@
 
         <provider
             android:name=".provider.ScheduleProvider"
-            android:authorities="com.google.android.apps.iosched"
-            android:writePermission="com.google.android.apps.iosched.permission.WRITE_SCHEDULE" />
+            android:authorities="org.acmelab.android.apps.iosched"
+            android:writePermission="org.acmelab.android.apps.iosched.permission.WRITE_SCHEDULE" />
 
     </application>
 </manifest>

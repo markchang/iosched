@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.ieeemass2010;
+package org.acmelab.android.apps.iosched.ieeemass2010;
 
 import org.apache.http.ConnectionReuseStrategy;
 import org.apache.http.HttpEntity;

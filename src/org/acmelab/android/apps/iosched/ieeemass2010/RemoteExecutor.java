@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.ieeemass2010;
+package org.acmelab.android.apps.iosched.ieeemass2010;
 
-import com.google.android.apps.iosched.ieeemass2010.XmlHandler.HandlerException;
-import com.google.android.apps.iosched.util.ParserUtils;
 
+import org.acmelab.android.apps.iosched.ieeemass2010.XmlHandler.HandlerException;
+import org.acmelab.android.apps.iosched.util.ParserUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;

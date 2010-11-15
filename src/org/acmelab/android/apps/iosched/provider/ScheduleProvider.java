@@ -14,24 +14,8 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.provider;
+package org.acmelab.android.apps.iosched.provider;
 
-import com.google.android.apps.iosched.provider.ScheduleContract.Blocks;
-import com.google.android.apps.iosched.provider.ScheduleContract.Notes;
-import com.google.android.apps.iosched.provider.ScheduleContract.Rooms;
-import com.google.android.apps.iosched.provider.ScheduleContract.SearchSuggest;
-import com.google.android.apps.iosched.provider.ScheduleContract.Sessions;
-import com.google.android.apps.iosched.provider.ScheduleContract.Speakers;
-import com.google.android.apps.iosched.provider.ScheduleContract.Tracks;
-import com.google.android.apps.iosched.provider.ScheduleContract.Vendors;
-import com.google.android.apps.iosched.provider.ScheduleDatabase.SessionsSearchColumns;
-import com.google.android.apps.iosched.provider.ScheduleDatabase.SessionsSpeakers;
-import com.google.android.apps.iosched.provider.ScheduleDatabase.SessionsTracks;
-import com.google.android.apps.iosched.provider.ScheduleDatabase.Tables;
-import com.google.android.apps.iosched.provider.ScheduleDatabase.VendorsSearchColumns;
-import com.google.android.apps.iosched.service.SyncService;
-import com.google.android.apps.iosched.util.NotesExporter;
-import com.google.android.apps.iosched.util.SelectionBuilder;
 
 import android.app.Activity;
 import android.app.SearchManager;
@@ -58,6 +42,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.Blocks;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.Notes;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.Rooms;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.SearchSuggest;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.Sessions;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.Speakers;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.Tracks;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.Vendors;
+import org.acmelab.android.apps.iosched.provider.ScheduleDatabase.SessionsSearchColumns;
+import org.acmelab.android.apps.iosched.provider.ScheduleDatabase.SessionsSpeakers;
+import org.acmelab.android.apps.iosched.provider.ScheduleDatabase.SessionsTracks;
+import org.acmelab.android.apps.iosched.provider.ScheduleDatabase.Tables;
+import org.acmelab.android.apps.iosched.provider.ScheduleDatabase.VendorsSearchColumns;
+import org.acmelab.android.apps.iosched.service.SyncService;
+import org.acmelab.android.apps.iosched.util.NotesExporter;
+import org.acmelab.android.apps.iosched.util.SelectionBuilder;
 
 /**
  * Provider that stores {@link ScheduleContract} data. Data is usually inserted

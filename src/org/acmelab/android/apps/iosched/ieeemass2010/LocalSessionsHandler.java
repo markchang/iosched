@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.ieeemass2010;
+package org.acmelab.android.apps.iosched.ieeemass2010;
 
 import static org.xmlpull.v1.XmlPullParser.END_DOCUMENT;
 import static org.xmlpull.v1.XmlPullParser.END_TAG;
 import static org.xmlpull.v1.XmlPullParser.START_TAG;
 import static org.xmlpull.v1.XmlPullParser.TEXT;
 
-import com.google.android.apps.iosched.provider.ScheduleContract;
-import com.google.android.apps.iosched.provider.ScheduleContract.Rooms;
-import com.google.android.apps.iosched.provider.ScheduleContract.Sessions;
-import com.google.android.apps.iosched.provider.ScheduleContract.Tracks;
-import com.google.android.apps.iosched.provider.ScheduleDatabase.SessionsTracks;
-import com.google.android.apps.iosched.util.Lists;
-import com.google.android.apps.iosched.util.ParserUtils;
 
+import org.acmelab.android.apps.iosched.provider.ScheduleContract;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.Rooms;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.Sessions;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.Tracks;
+import org.acmelab.android.apps.iosched.provider.ScheduleDatabase.SessionsTracks;
+import org.acmelab.android.apps.iosched.util.Lists;
+import org.acmelab.android.apps.iosched.util.ParserUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 

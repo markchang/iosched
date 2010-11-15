@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.provider;
+package org.acmelab.android.apps.iosched.provider;
 
-import com.google.android.apps.iosched.util.ParserUtils;
+import org.acmelab.android.apps.iosched.util.ParserUtils;
 
 import android.app.SearchManager;
 import android.content.ContentUris;
@@ -150,7 +150,7 @@ public class ScheduleContract {
         String NOTE_CONTENT = "note_content";
     }
 
-    public static final String CONTENT_AUTHORITY = "com.google.android.apps.iosched";
+    public static final String CONTENT_AUTHORITY = "org.acmelab.android.apps.iosched";
 
     private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 

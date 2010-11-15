@@ -14,55 +14,61 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.ieeemass2010;
+package org.acmelab.android.apps.iosched.ieeemass2010;
 
-import static com.google.android.apps.iosched.util.ParserUtils.sanitizeId;
 import static org.xmlpull.v1.XmlPullParser.END_DOCUMENT;
 import static org.xmlpull.v1.XmlPullParser.END_TAG;
 import static org.xmlpull.v1.XmlPullParser.START_TAG;
 import static org.xmlpull.v1.XmlPullParser.TEXT;
 
-import com.google.android.apps.iosched.provider.ScheduleContract;
-import com.google.android.apps.iosched.provider.ScheduleContract.Tracks;
-import com.google.android.apps.iosched.util.Lists;
-
+import org.acmelab.android.apps.iosched.provider.ScheduleContract;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.Rooms;
+import org.acmelab.android.apps.iosched.util.Lists;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
-import android.graphics.Color;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class LocalTracksHandler extends XmlHandler {
+/**
+ * Handle a local {@link XmlPullParser} that defines a set of {@link Rooms}
+ * entries. Usually loaded from {@link R.xml} resources.
+ */
+public class LocalRoomsHandler extends XmlHandler {
 
-    public LocalTracksHandler() {
+    public LocalRoomsHandler() {
         super(ScheduleContract.CONTENT_AUTHORITY);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ArrayList<ContentProviderOperation> parse(XmlPullParser parser, ContentResolver resolver)
             throws XmlPullParserException, IOException {
         final ArrayList<ContentProviderOperation> batch = Lists.newArrayList();
-        batch.add(ContentProviderOperation.newDelete(Tracks.CONTENT_URI).build());
 
         int type;
         while ((type = parser.next()) != END_DOCUMENT) {
-            if (type == START_TAG && Tags.TRACK.equals(parser.getName())) {
-                batch.add(parseTrack(parser));
+            if (type == START_TAG && Tags.ROOM.equals(parser.getName())) {
+                parseRoom(parser, batch, resolver);
             }
         }
 
         return batch;
     }
 
-    private static ContentProviderOperation parseTrack(XmlPullParser parser)
+    /**
+     * Parse a given {@link Rooms} entry, building
+     * {@link ContentProviderOperation} to define it locally.
+     */
+    private static void parseRoom(XmlPullParser parser,
+            ArrayList<ContentProviderOperation> batch, ContentResolver resolver)
             throws XmlPullParserException, IOException {
         final int depth = parser.getDepth();
-        final ContentProviderOperation.Builder builder = ContentProviderOperation
-                .newInsert(Tracks.CONTENT_URI);
+        ContentProviderOperation.Builder builder = ContentProviderOperation
+                .newInsert(Rooms.CONTENT_URI);
 
         String tag = null;
         int type;
@@ -74,26 +80,24 @@ public class LocalTracksHandler extends XmlHandler {
                 tag = null;
             } else if (type == TEXT) {
                 final String text = parser.getText();
-                if (Tags.NAME.equals(tag)) {
-                    final String trackId = sanitizeId(text);
-                    builder.withValue(Tracks.TRACK_ID, trackId);
-                    builder.withValue(Tracks.TRACK_NAME, text);
-                } else if (Tags.COLOR.equals(tag)) {
-                    final int color = Color.parseColor(text);
-                    builder.withValue(Tracks.TRACK_COLOR, color);
-                } else if (Tags.ABSTRACT.equals(tag)) {
-                    builder.withValue(Tracks.TRACK_ABSTRACT, text);
+                if (Tags.ID.equals(tag)) {
+                    builder.withValue(Rooms.ROOM_ID, text);
+                } else if (Tags.NAME.equals(tag)) {
+                    builder.withValue(Rooms.ROOM_NAME, text);
+                } else if (Tags.FLOOR.equals(tag)) {
+                    builder.withValue(Rooms.ROOM_FLOOR, text);
                 }
             }
         }
 
-        return builder.build();
+        batch.add(builder.build());
     }
 
-    interface Tags {
-        String TRACK = "track";
+    /** XML tags expected from local source. */
+    private interface Tags {
+        String ROOM = "room";
+        String ID = "id";
         String NAME = "name";
-        String COLOR = "color";
-        String ABSTRACT = "abstract";
+        String FLOOR = "floor";
     }
 }

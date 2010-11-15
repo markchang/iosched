@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.ieeemass2010;
+package org.acmelab.android.apps.iosched.ieeemass2010;
 
-import com.google.android.apps.iosched.provider.ScheduleContract;
-import com.google.android.apps.iosched.provider.ScheduleProvider;
-import com.google.android.apps.iosched.provider.ScheduleContract.Sessions;
-import com.google.android.apps.iosched.provider.ScheduleContract.Tracks;
-import com.google.android.apps.iosched.util.ParserUtils;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract;
+import org.acmelab.android.apps.iosched.provider.ScheduleProvider;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.Sessions;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.Tracks;
+import org.acmelab.android.apps.iosched.util.ParserUtils;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;

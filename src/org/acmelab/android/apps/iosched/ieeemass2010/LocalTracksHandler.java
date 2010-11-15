@@ -14,30 +14,31 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.ieeemass2010;
+package org.acmelab.android.apps.iosched.ieeemass2010;
 
+import static org.acmelab.android.apps.iosched.util.ParserUtils.sanitizeId;
 import static org.xmlpull.v1.XmlPullParser.END_DOCUMENT;
 import static org.xmlpull.v1.XmlPullParser.END_TAG;
 import static org.xmlpull.v1.XmlPullParser.START_TAG;
 import static org.xmlpull.v1.XmlPullParser.TEXT;
 
-import com.google.android.apps.iosched.provider.ScheduleContract;
-import com.google.android.apps.iosched.provider.ScheduleContract.Blocks;
-import com.google.android.apps.iosched.util.Lists;
-import com.google.android.apps.iosched.util.ParserUtils;
 
+import org.acmelab.android.apps.iosched.provider.ScheduleContract;
+import org.acmelab.android.apps.iosched.provider.ScheduleContract.Tracks;
+import org.acmelab.android.apps.iosched.util.Lists;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
+import android.graphics.Color;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class LocalBlocksHandler extends XmlHandler {
+public class LocalTracksHandler extends XmlHandler {
 
-    public LocalBlocksHandler() {
+    public LocalTracksHandler() {
         super(ScheduleContract.CONTENT_AUTHORITY);
     }
 
@@ -45,36 +46,23 @@ public class LocalBlocksHandler extends XmlHandler {
     public ArrayList<ContentProviderOperation> parse(XmlPullParser parser, ContentResolver resolver)
             throws XmlPullParserException, IOException {
         final ArrayList<ContentProviderOperation> batch = Lists.newArrayList();
-
-        // Clear any existing static blocks, as they may have been updated.
-        final String selection = Blocks.BLOCK_TYPE + "=? OR " + Blocks.BLOCK_TYPE +"=?";
-        final String[] selectionArgs = {
-                ParserUtils.BLOCK_TYPE_FOOD,
-                ParserUtils.BLOCK_TYPE_OFFICE_HOURS
-        };
-        batch.add(ContentProviderOperation.newDelete(Blocks.CONTENT_URI)
-                .withSelection(selection, selectionArgs).build());
+        batch.add(ContentProviderOperation.newDelete(Tracks.CONTENT_URI).build());
 
         int type;
         while ((type = parser.next()) != END_DOCUMENT) {
-            if (type == START_TAG && Tags.BLOCK.equals(parser.getName())) {
-                batch.add(parseBlock(parser));
+            if (type == START_TAG && Tags.TRACK.equals(parser.getName())) {
+                batch.add(parseTrack(parser));
             }
         }
 
         return batch;
     }
 
-    private static ContentProviderOperation parseBlock(XmlPullParser parser)
+    private static ContentProviderOperation parseTrack(XmlPullParser parser)
             throws XmlPullParserException, IOException {
         final int depth = parser.getDepth();
         final ContentProviderOperation.Builder builder = ContentProviderOperation
-                .newInsert(Blocks.CONTENT_URI);
-
-        String title = null;
-        long startTime = -1;
-        long endTime = -1;
-        String blockType = null;
+                .newInsert(Tracks.CONTENT_URI);
 
         String tag = null;
         int type;
@@ -86,34 +74,26 @@ public class LocalBlocksHandler extends XmlHandler {
                 tag = null;
             } else if (type == TEXT) {
                 final String text = parser.getText();
-                if (Tags.TITLE.equals(tag)) {
-                    title = text;
-                } else if (Tags.START.equals(tag)) {
-                    startTime = ParserUtils.parseTime(text);
-                } else if (Tags.END.equals(tag)) {
-                    endTime = ParserUtils.parseTime(text);
-                } else if (Tags.TYPE.equals(tag)) {
-                    blockType = text;
+                if (Tags.NAME.equals(tag)) {
+                    final String trackId = sanitizeId(text);
+                    builder.withValue(Tracks.TRACK_ID, trackId);
+                    builder.withValue(Tracks.TRACK_NAME, text);
+                } else if (Tags.COLOR.equals(tag)) {
+                    final int color = Color.parseColor(text);
+                    builder.withValue(Tracks.TRACK_COLOR, color);
+                } else if (Tags.ABSTRACT.equals(tag)) {
+                    builder.withValue(Tracks.TRACK_ABSTRACT, text);
                 }
             }
         }
-
-        final String blockId = Blocks.generateBlockId(startTime, endTime);
-
-        builder.withValue(Blocks.BLOCK_ID, blockId);
-        builder.withValue(Blocks.BLOCK_TITLE, title);
-        builder.withValue(Blocks.BLOCK_START, startTime);
-        builder.withValue(Blocks.BLOCK_END, endTime);
-        builder.withValue(Blocks.BLOCK_TYPE, blockType);
 
         return builder.build();
     }
 
     interface Tags {
-        String BLOCK = "block";
-        String TITLE = "title";
-        String START = "start";
-        String END = "end";
-        String TYPE = "type";
+        String TRACK = "track";
+        String NAME = "name";
+        String COLOR = "color";
+        String ABSTRACT = "abstract";
     }
 }
